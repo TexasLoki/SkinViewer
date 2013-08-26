@@ -114,7 +114,7 @@ public class FileManager {
 
 	public static void createDefaultCollection()
 	{
-		Skin3DWorld.skins = new SkinCollection("default", 1);
+		Skin3DWorld.skins = new SkinCollection("default", 100);
 	}
 	
 	public static boolean loadDefaultCollection()

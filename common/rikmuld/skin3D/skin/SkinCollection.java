@@ -18,7 +18,7 @@ import rikmuld.util.FileManager;
 
 public class SkinCollection {
 	
-	public int curr = -1;
+	public int curr = 0;
 	String name;
 	public Skin[] skins;
 	
