@@ -29,17 +29,17 @@ import rikmuld.util.fileFilter.FileFilterCollection;
 import rikmuld.util.fileFilter.FileFilterPng;
 
 @SuppressWarnings("serial")
-public class SkinLoader extends JPanel implements ActionListener, ChangeListener{
-	
+public class SkinLoader extends JPanel implements ActionListener, ChangeListener {
+
 	URL url;
 	public String skinName = "No Skin Loaded";
 	public static JFileChooser skinFileFinder = new JFileChooser();
 	JButton skinLoadButton, view1Button, view2Button, partMain, partHead, partBody, partArm, partLeg, createCollection, addColl, delColl, back, next, loadColl;
-    SkinDrawer2D drawer = new SkinDrawer2D();
-    public TextureLoader2D loader = new TextureLoader2D();
-    public int view = 0;
-    public int part = 0;
-    JTextField text, skinID;
+	SkinDrawer2D drawer = new SkinDrawer2D();
+	public TextureLoader2D loader = new TextureLoader2D();
+	public int view = 0;
+	public int part = 0;
+	JTextField text, skinID;
 	public boolean sync = false;
 	public JSlider size;
 	public int skinSize;
@@ -47,213 +47,213 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 	public SkinLoader()
 	{
 		super();
-		
-		 skinLoadButton = new JButton();	
-	     skinLoadButton.setBounds(25, 25, 200, 30);      
-	     skinLoadButton.setText("Load A New Skin File");	       
-	     skinLoadButton.addActionListener(this);
-	     text = new JTextField();
-	     text.setText("Or type an username!");
-	     text.setBounds(50, 60, 150, 20);  
-	     text.addActionListener(this);
-	     view1Button = new JButton();	
-	     view1Button.setBounds(263, 550, 100, 30);      
-	     view1Button.setText("View 1");	       
-	     view1Button.addActionListener(this);
-	     view2Button = new JButton();	
-	     view2Button.setBounds(388, 550, 100, 30);      
-	     view2Button.setText("View 2");	       
-	     view2Button.addActionListener(this);
-	     partMain = new JButton();	
-	     partMain.setBounds(287, 62, 175, 30);      
-	     partMain.setText("Total View");	       
-	     partMain.addActionListener(this);
-	     partHead = new JButton();	
-	     partHead.setBounds(35, 250, 100, 30);      
-	     partHead.setText("Head View");	       
-	     partHead.addActionListener(this);
-	     partBody = new JButton();	
-	     partBody.setBounds(35, 300, 100, 30);      
-	     partBody.setText("Body View");	       
-	     partBody.addActionListener(this);
-	     partArm = new JButton();	
-	     partArm.setBounds(615, 250, 100, 30);      
-	     partArm.setText("Arm View");	       
-	     partArm.addActionListener(this);
-	     partLeg = new JButton();	
-	     partLeg.setBounds(615, 300, 100, 30);      
-	     partLeg.setText("Leg View");	       
-	     partLeg.addActionListener(this);
-	     createCollection = new JButton();	
-	     createCollection.setBounds(80, 640, 200, 30);      
-	     createCollection.setText("Create A New Collection");	       
-	     createCollection.addActionListener(this);
-	     loadColl = new JButton();	
-	     loadColl.setBounds(470, 640, 200, 30);      
-	     loadColl.setText("Load A Collection");	       
-	     loadColl.addActionListener(this);
-	     addColl = new JButton();	
-	     addColl.setBounds(632, 100, 85, 20);      
-	     addColl.setText("Add Skin");	       
-	     addColl.addActionListener(this);
-	     delColl = new JButton();	
-	     delColl.setBounds(632, 125, 85, 20);      
-	     delColl.setText("Del Skin");	       
-	     delColl.addActionListener(this);
-	     back = new JButton();	
-	     back.setBounds(310, 640, 65, 40);      
-	     back.setText("Back");	       
-	     back.addActionListener(this);
-	     next = new JButton();	
-	     next.setBounds(375, 640, 65, 40); 
-	     next.setText("Next");	       
-	     next.addActionListener(this);
-	     skinID = new JTextField();
-	     skinID.setText("Skin ID");
-	     skinID.setBounds(310, 680, 130, 20);  
-	     skinID.addActionListener(this);
-	     size = new JSlider();
-	     size.setBounds(287, 590, 175, 19);
-	     size.setMinimum(0);
-	     size.setMaximum(5);
-	     size.addChangeListener(this);
-	     setLayout(null);   
-	     
-	     add(skinLoadButton);
-	     add(view1Button);
-	     add(view2Button);
-	     add(partMain);
-	     add(partHead);
-	     add(partBody);
-	     add(partArm);
-	     add(partLeg);
-		 add(text);
-		 add(addColl);
-		 add(delColl);
-		 add(createCollection);
-		 add(back);
-		 add(next);
-		 add(skinID);
-		 add(loadColl);
-		 add(size);
-	}
-	
-	public void paintComponent(Graphics g) 
-	{
-         super.paintComponent(g);
-         g.setFont(new Font("arial", 0, 18));
-		 
-		 if(skinName.length()>20)
-		 {
-			 skinName = skinName.substring(0, 20) + "...";
-		 }
-		 
-         g.drawString("Current Skin: "+skinName, 250, 47);         
 
-         if(loader.skinFile!=null)
-         {
-             drawer.drawSkin(g, view, part, loader, !this.skinName.equals("Notch"));
-         }
-         
-         if(Skin3DWorld.skins!=null)
-         {        	 
-        	 if(loader.skinFile!=null)addColl.setVisible(true);
-         	 else addColl.setVisible(false);
-         	 if(loader.skinFile!=null)delColl.setVisible(true);
-         	 else delColl.setVisible(false);
-         	 
-        	 next.setVisible(true);
-        	 skinID.setVisible(true);
-        	 
-        	 skinID.setText(Integer.toString(Skin3DWorld.skins.curr));
-         }
-         
-         if(this.loader.skinFile!=null&&Skin3DWorld.skins!=null&&Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null&&sync == true)
-         {
-        	 Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setSkinTexture(loader.skinFile);
-			 Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name = skinName;			
-			 Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setPart(part);
-			 Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setView(view);
-			 Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setSize(skinSize);			
-			 sync = false;
-         }
-         
-		if(Skin3DWorld.skins!=null)Skin3DWorld.skins.saveCollectionToDisk();
-    }
-	
-	@Override
-	public void actionPerformed(ActionEvent event) 
+		skinLoadButton = new JButton();
+		skinLoadButton.setBounds(25, 25, 200, 30);
+		skinLoadButton.setText("Load A New Skin File");
+		skinLoadButton.addActionListener(this);
+		text = new JTextField();
+		text.setText("Or type an username!");
+		text.setBounds(50, 60, 150, 20);
+		text.addActionListener(this);
+		view1Button = new JButton();
+		view1Button.setBounds(263, 550, 100, 30);
+		view1Button.setText("View 1");
+		view1Button.addActionListener(this);
+		view2Button = new JButton();
+		view2Button.setBounds(388, 550, 100, 30);
+		view2Button.setText("View 2");
+		view2Button.addActionListener(this);
+		partMain = new JButton();
+		partMain.setBounds(287, 62, 175, 30);
+		partMain.setText("Total View");
+		partMain.addActionListener(this);
+		partHead = new JButton();
+		partHead.setBounds(35, 250, 100, 30);
+		partHead.setText("Head View");
+		partHead.addActionListener(this);
+		partBody = new JButton();
+		partBody.setBounds(35, 300, 100, 30);
+		partBody.setText("Body View");
+		partBody.addActionListener(this);
+		partArm = new JButton();
+		partArm.setBounds(615, 250, 100, 30);
+		partArm.setText("Arm View");
+		partArm.addActionListener(this);
+		partLeg = new JButton();
+		partLeg.setBounds(615, 300, 100, 30);
+		partLeg.setText("Leg View");
+		partLeg.addActionListener(this);
+		createCollection = new JButton();
+		createCollection.setBounds(80, 640, 200, 30);
+		createCollection.setText("Create A New Collection");
+		createCollection.addActionListener(this);
+		loadColl = new JButton();
+		loadColl.setBounds(470, 640, 200, 30);
+		loadColl.setText("Load A Collection");
+		loadColl.addActionListener(this);
+		addColl = new JButton();
+		addColl.setBounds(632, 100, 85, 20);
+		addColl.setText("Add Skin");
+		addColl.addActionListener(this);
+		delColl = new JButton();
+		delColl.setBounds(632, 125, 85, 20);
+		delColl.setText("Del Skin");
+		delColl.addActionListener(this);
+		back = new JButton();
+		back.setBounds(310, 640, 65, 40);
+		back.setText("Back");
+		back.addActionListener(this);
+		next = new JButton();
+		next.setBounds(375, 640, 65, 40);
+		next.setText("Next");
+		next.addActionListener(this);
+		skinID = new JTextField();
+		skinID.setText("Skin ID");
+		skinID.setBounds(310, 680, 130, 20);
+		skinID.addActionListener(this);
+		size = new JSlider();
+		size.setBounds(287, 590, 175, 19);
+		size.setMinimum(0);
+		size.setMaximum(5);
+		size.addChangeListener(this);
+		setLayout(null);
+
+		add(skinLoadButton);
+		add(view1Button);
+		add(view2Button);
+		add(partMain);
+		add(partHead);
+		add(partBody);
+		add(partArm);
+		add(partLeg);
+		add(text);
+		add(addColl);
+		add(delColl);
+		add(createCollection);
+		add(back);
+		add(next);
+		add(skinID);
+		add(loadColl);
+		add(size);
+	}
+
+	public void paintComponent(Graphics g)
 	{
-		if (event.getSource() == skinLoadButton)
+		super.paintComponent(g);
+		g.setFont(new Font("arial", 0, 18));
+
+		if(skinName.length()>20)
+		{
+			skinName = skinName.substring(0, 20)+"...";
+		}
+
+		g.drawString("Current Skin: "+skinName, 250, 47);
+
+		if(loader.skinFile!=null)
+		{
+			drawer.drawSkin(g, view, part, loader, !this.skinName.equals("Notch"));
+		}
+
+		if(Skin3DWorld.skins!=null)
+		{
+			if(loader.skinFile!=null) addColl.setVisible(true);
+			else addColl.setVisible(false);
+			if(loader.skinFile!=null) delColl.setVisible(true);
+			else delColl.setVisible(false);
+
+			next.setVisible(true);
+			skinID.setVisible(true);
+
+			skinID.setText(Integer.toString(Skin3DWorld.skins.curr));
+		}
+
+		if(this.loader.skinFile!=null&&Skin3DWorld.skins!=null&&Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null&&sync==true)
+		{
+			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setSkinTexture(loader.skinFile);
+			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name = skinName;
+			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setPart(part);
+			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setView(view);
+			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setSize(skinSize);
+			sync = false;
+		}
+
+		if(Skin3DWorld.skins!=null) Skin3DWorld.skins.saveCollectionToDisk();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event)
+	{
+		if(event.getSource()==skinLoadButton)
 		{
 			skinFileFinder.setAcceptAllFileFilterUsed(false);
 			skinFileFinder.setCurrentDirectory(skinFileFinder.getFileSystemView().getDefaultDirectory());
 			skinFileFinder.setFileFilter(new FileFilterPng());
-			
-			int returnVal = skinFileFinder.showOpenDialog(SkinLoader.this);	
-			if (returnVal == JFileChooser.APPROVE_OPTION&&SkinFileRquirements.isSkinFile(skinFileFinder.getSelectedFile()))
+
+			int returnVal = skinFileFinder.showOpenDialog(SkinLoader.this);
+			if(returnVal==JFileChooser.APPROVE_OPTION&&SkinFileRquirements.isSkinFile(skinFileFinder.getSelectedFile()))
 			{
 				skinName = skinFileFinder.getSelectedFile().getName().substring(0, skinFileFinder.getSelectedFile().getName().length()-4);
 				this.view = 0;
 				this.part = 0;
 				size.setValue(3);
-				
+
 				loader.setSkinFile(skinFileFinder.getSelectedFile());
-				
+
 				sync = true;
 				this.repaint();
-			}	
-		} 
-		if (event.getSource() == view1Button)
+			}
+		}
+		if(event.getSource()==view1Button)
 		{
 			this.view = 0;
 			sync = true;
 			this.repaint();
-		} 
-		if (event.getSource() == view2Button)
+		}
+		if(event.getSource()==view2Button)
 		{
 			this.view = 1;
 			sync = true;
 			this.repaint();
-		} 
-		if (event.getSource() == partMain)
+		}
+		if(event.getSource()==partMain)
 		{
 			this.part = 0;
 			sync = true;
 			this.repaint();
-		} 
-		if (event.getSource() == partHead)
+		}
+		if(event.getSource()==partHead)
 		{
 			this.part = 1;
 			sync = true;
 			this.repaint();
-		} 
-		if (event.getSource() == partBody)
+		}
+		if(event.getSource()==partBody)
 		{
 			this.part = 2;
 			sync = true;
 			this.repaint();
-		} 
-		if (event.getSource() == partArm)
+		}
+		if(event.getSource()==partArm)
 		{
 			this.part = 3;
 			sync = true;
 			this.repaint();
-		} 
-		if (event.getSource() == partLeg)
+		}
+		if(event.getSource()==partLeg)
 		{
 			this.part = 4;
 			sync = true;
 			this.repaint();
-		} 
-		if (event.getSource() == text)
+		}
+		if(event.getSource()==text)
 		{
-			try 
+			try
 			{
-				url = new URL("http://s3.amazonaws.com/MinecraftSkins/"+text.getText()+".png");			
+				url = new URL("http://s3.amazonaws.com/MinecraftSkins/"+text.getText()+".png");
 				InputStream reader = url.openStream();
 				BufferedImage img = ImageIO.read(reader);
-				if(img != null)
+				if(img!=null)
 				{
 					this.skinName = text.getText();
 					this.view = 0;
@@ -265,54 +265,54 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 					sync = true;
 				}
 			}
-			catch (IOException e) 
+			catch(IOException e)
 			{
 				e.printStackTrace();
 			}
 			this.repaint();
-		} 		
-		if (event.getSource() == createCollection)
+		}
+		if(event.getSource()==createCollection)
 		{
 			Skin3DWorld.skins.saveCollectionToDisk();
-			
+
 			skinFileFinder.setAcceptAllFileFilterUsed(false);
 			skinFileFinder.setCurrentDirectory(new File(FileManager.dir));
 			skinFileFinder.setFileFilter(new FileFilterCollection());
-			
+
 			int returnVal = skinFileFinder.showSaveDialog(SkinLoader.this);
-						
-			if (returnVal == JFileChooser.APPROVE_OPTION)
+
+			if(returnVal==JFileChooser.APPROVE_OPTION)
 			{
 				Skin3DWorld.skins = new SkinCollection(skinFileFinder.getSelectedFile().getName(), 100);
-			}	
-			
+			}
+
 			sync = true;
 			repaint();
 		}
-		if (event.getSource() == addColl)
+		if(event.getSource()==addColl)
 		{
 			Skin3DWorld.saveCollection();
 			Skin3DWorld.skins.setSkin(Skin3DWorld.skins.getNextId(), loader.skinFile, Skin3DWorld.grassTop, Skin3DWorld.grassSide, skinName);
-			
+
 			sync = true;
 			repaint();
-		} 
-		if (event.getSource() == delColl)
+		}
+		if(event.getSource()==delColl)
 		{
 			if(Skin3DWorld.skins.curr>=0)
 			{
 				Skin3DWorld.saveCollection();
 				Skin3DWorld.skins.skins[Skin3DWorld.skins.curr] = null;
-				
+
 				sync = true;
 				repaint();
 			}
 		}
-		if (event.getSource() == next)
+		if(event.getSource()==next)
 		{
 			if(Skin3DWorld.skins.curr<100&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr+1]!=null)
 			{
-				Skin3DWorld.skins.curr++;		
+				Skin3DWorld.skins.curr++;
 				this.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
 				this.view = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].view;
 				this.part = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].part;
@@ -321,17 +321,17 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			}
 			else if(Skin3DWorld.skins.curr<100&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr+1]==null)
 			{
-				Skin3DWorld.skins.curr++;		
+				Skin3DWorld.skins.curr++;
 				this.loader.skinFile = null;
 				this.view = 0;
 				this.part = 0;
 				this.skinName = "No Skin Loaded";
 				this.size.setValue(3);
 			}
-			
+
 			repaint();
-		} 
-		if (event.getSource() == back)
+		}
+		if(event.getSource()==back)
 		{
 			if(Skin3DWorld.skins.curr>0&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr-1]!=null)
 			{
@@ -344,7 +344,7 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			}
 			else if(Skin3DWorld.skins.curr>0&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr-1]==null)
 			{
-				Skin3DWorld.skins.curr--;		
+				Skin3DWorld.skins.curr--;
 				this.loader.skinFile = null;
 				this.view = 0;
 				this.part = 0;
@@ -353,7 +353,7 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			}
 			repaint();
 		}
-		if (event.getSource() == skinID)
+		if(event.getSource()==skinID)
 		{
 			if(Integer.parseInt(skinID.getText())<=100&&Integer.parseInt(skinID.getText())>=0&&Skin3DWorld.skins.skins[Integer.parseInt(skinID.getText())]!=null)
 			{
@@ -365,25 +365,25 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			}
 			repaint();
 		}
-		if (event.getSource() == loadColl)
+		if(event.getSource()==loadColl)
 		{
 			skinFileFinder.setAcceptAllFileFilterUsed(false);
 			skinFileFinder.setCurrentDirectory(new File(FileManager.dir));
 			skinFileFinder.setFileFilter(new FileFilterCollection());
-			
+
 			int returnVal = skinFileFinder.showOpenDialog(SkinLoader.this);
-						
-			if (returnVal == JFileChooser.APPROVE_OPTION)
+
+			if(returnVal==JFileChooser.APPROVE_OPTION)
 			{
 				FileManager.requestCollection(skinFileFinder.getSelectedFile().getName().substring(0, skinFileFinder.getSelectedFile().getName().length()-11));
-			}	
-		} 
+			}
+		}
 	}
 
 	@Override
-	public void stateChanged(ChangeEvent event) 
+	public void stateChanged(ChangeEvent event)
 	{
-		if(event.getSource() == size)
+		if(event.getSource()==size)
 		{
 			this.skinSize = size.getValue();
 			this.sync = true;

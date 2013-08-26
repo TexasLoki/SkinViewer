@@ -17,28 +17,28 @@ import rikmuld.skin3D.world.Skin3DWorld;
 import rikmuld.util.FileManager;
 
 public class SkinCollection {
-	
+
 	public int curr = 0;
 	String name;
 	public Skin[] skins;
-	
+
 	int id = -1;
 	BufferedImage img;
 	Texture texTop;
 	Texture texSide;
 	String skinName;
-		
+
 	public SkinCollection(String name, int size)
 	{
-		this.name = name.replaceAll("\\s","");
+		this.name = name.replaceAll("\\s", "");
 		skins = new Skin[size];
 	}
-	
+
 	public String getName()
 	{
 		return name;
 	}
-	
+
 	public void setSkin(int id, BufferedImage img, Texture texTop, Texture texSide, String name)
 	{
 		this.curr = id;
@@ -48,18 +48,18 @@ public class SkinCollection {
 		this.texSide = texSide;
 		this.skinName = name;
 	}
-	
+
 	public int getNextId()
 	{
 		int i = 0;
-		for(Skin skin:skins)
+		for(Skin skin : skins)
 		{
-			if (skin==null)return i;
+			if(skin==null) return i;
 			i++;
 		}
 		return -1;
 	}
-	
+
 	public void updateSkins()
 	{
 		if(this.id!=-1)
@@ -70,62 +70,62 @@ public class SkinCollection {
 			this.texTop = null;
 			this.texSide = null;
 			this.skinName = "";
-			
+
 			this.saveCollectionToDisk();
 			Start.gui.panel.sync = true;
 			Start.gui.panel.repaint();
 		}
 	}
-	
-	public void saveCollectionToDisk() 
-	{		
+
+	public void saveCollectionToDisk()
+	{
 		FileManager.saveProps();
-		
+
 		(new File(FileManager.dir)).mkdir();
 		(new File(FileManager.dir+this.name)).mkdir();
-		
-		for(File file2: new File(FileManager.dir+this.name).listFiles()) 
+
+		for(File file2 : new File(FileManager.dir+this.name).listFiles())
 		{
 			file2.delete();
 		}
-		
+
 		File file = new File(FileManager.dir+this.name+"/"+this.name+".collection");
 
-		try 
+		try
 		{
 			file.createNewFile();
-		} 
-		catch (IOException e) 
+		}
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
-		
-		try 
+
+		try
 		{
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));
 			out.write(Integer.toString(this.skins.length));
 			out.newLine();
-			out.write(Integer.toString(this.curr) + "\n");
+			out.write(Integer.toString(this.curr)+"\n");
 			out.newLine();
 
 			out.write(Float.toString(Skin3DWorld.camera.vector.getX()));
 			out.newLine();
 			out.write(Float.toString(Skin3DWorld.camera.vector.getY()));
 			out.newLine();
-			out.write(Float.toString( Skin3DWorld.camera.vector.getZ()));
+			out.write(Float.toString(Skin3DWorld.camera.vector.getZ()));
 			out.newLine();
-			out.write(Float.toString( Skin3DWorld.camera.rotation.getX()));
+			out.write(Float.toString(Skin3DWorld.camera.rotation.getX()));
 			out.newLine();
-			out.write(Float.toString( Skin3DWorld.camera.rotation.getY()));
+			out.write(Float.toString(Skin3DWorld.camera.rotation.getY()));
 			out.newLine();
-			out.write(Float.toString( Skin3DWorld.camera.rotation.getZ()));
+			out.write(Float.toString(Skin3DWorld.camera.rotation.getZ()));
 			out.newLine();
 
 			for(int i = 0; i<skins.length; i++)
 			{
 				if(skins[i]!=null)
 				{
-					out.write(skins[i].name.replaceAll("\\s",""));
+					out.write(skins[i].name.replaceAll("\\s", ""));
 					out.newLine();
 					out.write(Integer.toString(skins[i].part));
 					out.newLine();
@@ -133,22 +133,22 @@ public class SkinCollection {
 					out.newLine();
 					out.write(Integer.toString(skins[i].size));
 					out.newLine();
-					
+
 					String fileName = this.name+"/"+skins[i].name+".png";
-					
-					ImageIO.write(skins[i].skinFile, "png", (new File(FileManager.dir+fileName.replaceAll("\\s",""))));
+
+					ImageIO.write(skins[i].skinFile, "png", (new File(FileManager.dir+fileName.replaceAll("\\s", ""))));
 				}
 			}
-			
+
 			out.close();
 		}
-		catch (IOException e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
-	public static boolean loadCollectionFromDisk(String name) 
+
+	public static boolean loadCollectionFromDisk(String name)
 	{
 		SkinCollection collect = null;
 		File file = new File(FileManager.dir+name+"/"+name+".collection");
@@ -159,54 +159,54 @@ public class SkinCollection {
 		int[] skinPart = null;
 		int[] skinSize = null;
 		Skin[] skin = null;
-		
+
 		if(file.exists())
 		{
-		    try
-		    {
-				Scanner scanner =  new Scanner(new FileReader(file));
-	
-	    		skinNum = Integer.parseInt(scanner.next());
-	    		current = Integer.parseInt(scanner.next());
+			try
+			{
+				Scanner scanner = new Scanner(new FileReader(file));
 
-	    		nameSkin = new String[skinNum];
-	    		skinView = new int[skinNum];
-	    		skinPart = new int[skinNum];
-	    		skinSize = new int[skinNum];
-	    		
-	    		Skin3DWorld.camera.vector.x = Float.parseFloat(scanner.next());
-	    		Skin3DWorld.camera.vector.y = Float.parseFloat(scanner.next());
-	    		Skin3DWorld.camera.vector.z = Float.parseFloat(scanner.next());
-	    		Skin3DWorld.camera.rotation.x = Float.parseFloat(scanner.next());
-	    		Skin3DWorld.camera.rotation.y = Float.parseFloat(scanner.next());
-	    		Skin3DWorld.camera.rotation.z = Float.parseFloat(scanner.next());
+				skinNum = Integer.parseInt(scanner.next());
+				current = Integer.parseInt(scanner.next());
 
-	    		Skin3DWorld.camera.setVector[0] = true;
-	    		Skin3DWorld.camera.setVector[1] = true;
+				nameSkin = new String[skinNum];
+				skinView = new int[skinNum];
+				skinPart = new int[skinNum];
+				skinSize = new int[skinNum];
 
-	    		for(int j = 0; j<skinNum; j++)
-	    		{
-		    		if(scanner.hasNext())	
-	    			{
-			        	nameSkin[j] = scanner.next();	     
-			        	skinPart[j] = Integer.parseInt(scanner.next());
-			        	skinView[j] = Integer.parseInt(scanner.next());
-			        	skinSize[j] = Integer.parseInt(scanner.next());
-	    			}
-		    	}
-	    		scanner.close();
-		    }
-		    catch (IOException e) 
+				Skin3DWorld.camera.vector.x = Float.parseFloat(scanner.next());
+				Skin3DWorld.camera.vector.y = Float.parseFloat(scanner.next());
+				Skin3DWorld.camera.vector.z = Float.parseFloat(scanner.next());
+				Skin3DWorld.camera.rotation.x = Float.parseFloat(scanner.next());
+				Skin3DWorld.camera.rotation.y = Float.parseFloat(scanner.next());
+				Skin3DWorld.camera.rotation.z = Float.parseFloat(scanner.next());
+
+				Skin3DWorld.camera.setVector[0] = true;
+				Skin3DWorld.camera.setVector[1] = true;
+
+				for(int j = 0; j<skinNum; j++)
+				{
+					if(scanner.hasNext())
+					{
+						nameSkin[j] = scanner.next();
+						skinPart[j] = Integer.parseInt(scanner.next());
+						skinView[j] = Integer.parseInt(scanner.next());
+						skinSize[j] = Integer.parseInt(scanner.next());
+					}
+				}
+				scanner.close();
+			}
+			catch(IOException e)
 			{
 				e.printStackTrace();
 			}
-		    
-			try 
+
+			try
 			{
-				collect = new SkinCollection(name, (skinNum==0)? 1:100);
-				
+				collect = new SkinCollection(name, (skinNum==0) ? 1 : 100);
+
 				skin = new Skin[skinNum];
-				
+
 				for(int i = 0; i<skinNum; i++)
 				{
 					if(nameSkin[i]!=null)
@@ -216,22 +216,22 @@ public class SkinCollection {
 						int part = skinPart[i];
 						int size = skinSize[i];
 						String nameS = nameSkin[i];
-						
+
 						skin[i] = new Skin(skinFile, i, Skin3DWorld.grassTop, Skin3DWorld.grassSide, nameS, collect);
 						skin[i].view = view;
 						skin[i].part = part;
 						skin[i].size = size;
 					}
 				}
-				
+
 				collect.skins = skin;
 				Skin3DWorld.skins = collect;
 				Skin3DWorld.skins.curr = current;
 				collect.saveCollectionToDisk();
-				
+
 				return true;
-			} 
-			catch (IOException e) 
+			}
+			catch(IOException e)
 			{
 				e.printStackTrace();
 			}
