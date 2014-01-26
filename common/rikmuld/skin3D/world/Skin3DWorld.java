@@ -22,7 +22,7 @@ public class Skin3DWorld implements Runnable {
 
 	boolean[] keys = new boolean[256];
 	public static Camera camera;
-	public static Texture grassTop, grassSide;
+	public static Texture grassTop, grassSide, grassBottom, background1;
 	boolean flag = false, saveFlag = false;
 	public static Skin3DWorld thread = null;
 	public static SkinCollection skins;
@@ -50,6 +50,9 @@ public class Skin3DWorld implements Runnable {
 		{
 			grassTop = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassTop.png"));
 			grassSide = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassSide.png"));
+			grassBottom = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassBottom.png"));
+			
+			background1 = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/background1.png"));
 		}
 		catch(Exception e)
 		{
@@ -57,9 +60,40 @@ public class Skin3DWorld implements Runnable {
 		}
 	}
 
+	public void drawBackground()
+	{
+		this.setup2DDisplay();
+		
+		background1.bind();
+		
+		GL11.glPushMatrix();
+
+		GL11.glBegin(GL11.GL_QUADS);
+		
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f(0, 0);
+
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex2f(1, 0);
+
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex2f(1, 1);
+
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex2f(0, 1);
+		
+		GL11.glEnd();
+		
+		GL11.glPopMatrix();
+	}
+	
 	public void render()
 	{
 		clearScreen();
+		
+		this.drawBackground();
+		this.setup3DDisplay();
+		
 		camera.translatePostion();
 		skins.updateSkins();
 
@@ -107,7 +141,7 @@ public class Skin3DWorld implements Runnable {
 
 	}
 
-	public void setupDisplay()
+	public void setup3DDisplay()
 	{
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
@@ -128,6 +162,23 @@ public class Skin3DWorld implements Runnable {
 		GL11.glClearDepth(1.0f);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
+	}
+	
+	public void setup2DDisplay()
+	{
+		GL11.glEnable(GL11.GL_TEXTURE_2D);		
+		GL11.glEnable(GL11.GL_BLEND); 
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);	
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glClearColor(1, 1, 1, 1);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, 1, 1, 0, -1, 1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		GL11.glViewport(0, 0, 600, 600); 	
 	}
 
 	public void clearScreen()
@@ -152,7 +203,7 @@ public class Skin3DWorld implements Runnable {
 
 		Display.setTitle("RikMuld's 3D Skin Viewer");
 
-		this.setupDisplay();
+		this.setup3DDisplay();
 
 		camera = new Camera(this);
 		loadTextures();

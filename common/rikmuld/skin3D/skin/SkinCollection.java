@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import org.newdawn.slick.opengl.Texture;
 
 import rikmuld.main.Start;
+import rikmuld.skin2D.Stats2D;
 import rikmuld.skin3D.world.Skin3DWorld;
 import rikmuld.util.FileManager;
 
@@ -26,6 +27,7 @@ public class SkinCollection {
 	BufferedImage img;
 	Texture texTop;
 	Texture texSide;
+	Texture texBottom;
 	String skinName;
 
 	public SkinCollection(String name, int size)
@@ -39,13 +41,14 @@ public class SkinCollection {
 		return name;
 	}
 
-	public void setSkin(int id, BufferedImage img, Texture texTop, Texture texSide, String name)
+	public void setSkin(int id, BufferedImage img, Texture texTop, Texture texSide, Texture texBottom, String name)
 	{
 		this.curr = id;
 		this.id = id;
 		this.img = img;
 		this.texTop = texTop;
 		this.texSide = texSide;
+		this.texBottom = texBottom;
 		this.skinName = name;
 	}
 
@@ -64,7 +67,7 @@ public class SkinCollection {
 	{
 		if(this.id!=-1)
 		{
-			skins[id] = new Skin(img, id, texTop, texSide, skinName, this);
+			skins[id] = new Skin(img, id, texTop, texSide, texBottom, skinName, this);
 			this.id = -1;
 			this.img = null;
 			this.texTop = null;
@@ -72,7 +75,7 @@ public class SkinCollection {
 			this.skinName = "";
 
 			this.saveCollectionToDisk();
-			Start.gui.panel.sync = true;
+			Stats2D.sync = true;
 			Start.gui.panel.repaint();
 		}
 	}
@@ -127,11 +130,21 @@ public class SkinCollection {
 				{
 					out.write(skins[i].name.replaceAll("\\s", ""));
 					out.newLine();
-					out.write(Integer.toString(skins[i].part));
+					out.write(Boolean.toString(skins[i].stats.head));
 					out.newLine();
-					out.write(Integer.toString(skins[i].view));
+					out.write(Boolean.toString(skins[i].stats.headWear));
 					out.newLine();
-					out.write(Integer.toString(skins[i].size));
+					out.write(Boolean.toString(skins[i].stats.body));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.armL));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.armR));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.legL));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.legR));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.hasBlock));
 					out.newLine();
 
 					String fileName = this.name+"/"+skins[i].name+".png";
@@ -155,9 +168,8 @@ public class SkinCollection {
 		int skinNum = 0;
 		int current = 0;
 		String[] nameSkin = null;
-		int[] skinView = null;
-		int[] skinPart = null;
-		int[] skinSize = null;
+		boolean[][] skinPart = null;
+		boolean[] hasBlock = null;
 		Skin[] skin = null;
 
 		if(file.exists())
@@ -170,9 +182,8 @@ public class SkinCollection {
 				current = Integer.parseInt(scanner.next());
 
 				nameSkin = new String[skinNum];
-				skinView = new int[skinNum];
-				skinPart = new int[skinNum];
-				skinSize = new int[skinNum];
+				skinPart = new boolean[7][skinNum];
+				hasBlock = new boolean[skinNum];
 
 				Skin3DWorld.camera.vector.x = Float.parseFloat(scanner.next());
 				Skin3DWorld.camera.vector.y = Float.parseFloat(scanner.next());
@@ -189,9 +200,14 @@ public class SkinCollection {
 					if(scanner.hasNext())
 					{
 						nameSkin[j] = scanner.next();
-						skinPart[j] = Integer.parseInt(scanner.next());
-						skinView[j] = Integer.parseInt(scanner.next());
-						skinSize[j] = Integer.parseInt(scanner.next());
+						skinPart[0][j] = Boolean.parseBoolean(scanner.next());
+						skinPart[1][j] = Boolean.parseBoolean(scanner.next());
+						skinPart[2][j] = Boolean.parseBoolean(scanner.next());
+						skinPart[3][j] = Boolean.parseBoolean(scanner.next());
+						skinPart[4][j] = Boolean.parseBoolean(scanner.next());
+						skinPart[5][j] = Boolean.parseBoolean(scanner.next());
+						skinPart[6][j] = Boolean.parseBoolean(scanner.next());
+						hasBlock[j] = Boolean.parseBoolean(scanner.next());
 					}
 				}
 				scanner.close();
@@ -212,15 +228,17 @@ public class SkinCollection {
 					if(nameSkin[i]!=null)
 					{
 						BufferedImage skinFile = ImageIO.read((new File(FileManager.dir+name+"/"+nameSkin[i]+".png")));
-						int view = skinView[i];
-						int part = skinPart[i];
-						int size = skinSize[i];
 						String nameS = nameSkin[i];
 
-						skin[i] = new Skin(skinFile, i, Skin3DWorld.grassTop, Skin3DWorld.grassSide, nameS, collect);
-						skin[i].view = view;
-						skin[i].part = part;
-						skin[i].size = size;
+						skin[i] = new Skin(skinFile, i, Skin3DWorld.grassTop, Skin3DWorld.grassSide, Skin3DWorld.grassBottom, nameS, collect);
+						skin[i].stats.head = skinPart[0][i];
+						skin[i].stats.headWear = skinPart[1][i];
+						skin[i].stats.body = skinPart[2][i];
+						skin[i].stats.armL = skinPart[3][i];
+						skin[i].stats.armR = skinPart[4][i];
+						skin[i].stats.legL = skinPart[5][i];
+						skin[i].stats.legR = skinPart[6][i];
+						skin[i].stats.hasBlock = hasBlock[i];
 					}
 				}
 

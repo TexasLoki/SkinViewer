@@ -65,11 +65,11 @@ public class Camera {
 				vector.x += (float) (Math.sin((-rotation.y+90)*Math.PI/180)*speed);
 				vector.z += (float) (Math.cos((-rotation.y+90)*Math.PI/180)*speed);
 			}
-			if(flyUp&&vector.y<50)
+			if(flyUp)
 			{
 				vector.y += speed;
 			}
-			else if(flyDown&&vector.y>0)
+			else if(flyDown)
 			{
 				vector.y -= speed;
 			}

@@ -1,5 +1,6 @@
 package rikmuld.main;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -14,13 +15,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import rikmuld.skin2D.Options2D;
 import rikmuld.skin2D.SkinDrawer2D;
+import rikmuld.skin2D.Stats2D;
 import rikmuld.skin2D.TextureLoader2D;
+import rikmuld.skin3D.Options3D;
 import rikmuld.skin3D.skin.SkinCollection;
 import rikmuld.skin3D.world.Skin3DWorld;
 import rikmuld.util.FileManager;
@@ -29,104 +30,72 @@ import rikmuld.util.fileFilter.FileFilterCollection;
 import rikmuld.util.fileFilter.FileFilterPng;
 
 @SuppressWarnings("serial")
-public class SkinLoader extends JPanel implements ActionListener, ChangeListener {
+public class SkinLoader extends JPanel implements ActionListener {
 
 	URL url;
 	public String skinName = "No Skin Loaded";
 	public static JFileChooser skinFileFinder = new JFileChooser();
-	JButton skinLoadButton, view1Button, view2Button, partMain, partHead, partBody, partArm, partLeg, createCollection, addColl, delColl, back, next, loadColl;
+	JButton option3D, option2D, skinLoadButton, createCollection, addColl, delColl, back, next, loadColl;
 	SkinDrawer2D drawer = new SkinDrawer2D();
 	public TextureLoader2D loader = new TextureLoader2D();
-	public int view = 0;
-	public int part = 0;
 	JTextField text, skinID;
-	public boolean sync = false;
-	public JSlider size;
-	public int skinSize;
+	Options3D options3D = new Options3D();
+	Options2D options2D = new Options2D();
 
 	public SkinLoader()
 	{
 		super();
 
+		option3D = new JButton();
+		option3D.setBounds(25, 25, 150, 25);
+		option3D.setText("3D Options");
+		option3D.addActionListener(this);
+		option2D = new JButton();
+		option2D.setBounds(25, 55, 150, 25);
+		option2D.setText("2D Options");
+		option2D.addActionListener(this);
 		skinLoadButton = new JButton();
-		skinLoadButton.setBounds(25, 25, 200, 30);
+		skinLoadButton.setBounds(500, 25, 200, 30);
 		skinLoadButton.setText("Load A New Skin File");
 		skinLoadButton.addActionListener(this);
 		text = new JTextField();
 		text.setText("Or type an username!");
-		text.setBounds(50, 60, 150, 20);
+		text.setBounds(525, 60, 150, 20);
 		text.addActionListener(this);
-		view1Button = new JButton();
-		view1Button.setBounds(263, 550, 100, 30);
-		view1Button.setText("View 1");
-		view1Button.addActionListener(this);
-		view2Button = new JButton();
-		view2Button.setBounds(388, 550, 100, 30);
-		view2Button.setText("View 2");
-		view2Button.addActionListener(this);
-		partMain = new JButton();
-		partMain.setBounds(287, 62, 175, 30);
-		partMain.setText("Total View");
-		partMain.addActionListener(this);
-		partHead = new JButton();
-		partHead.setBounds(35, 250, 100, 30);
-		partHead.setText("Head View");
-		partHead.addActionListener(this);
-		partBody = new JButton();
-		partBody.setBounds(35, 300, 100, 30);
-		partBody.setText("Body View");
-		partBody.addActionListener(this);
-		partArm = new JButton();
-		partArm.setBounds(615, 250, 100, 30);
-		partArm.setText("Arm View");
-		partArm.addActionListener(this);
-		partLeg = new JButton();
-		partLeg.setBounds(615, 300, 100, 30);
-		partLeg.setText("Leg View");
-		partLeg.addActionListener(this);
 		createCollection = new JButton();
-		createCollection.setBounds(80, 640, 200, 30);
+		createCollection.setBounds(320, 720, 200, 30);
 		createCollection.setText("Create A New Collection");
 		createCollection.addActionListener(this);
 		loadColl = new JButton();
-		loadColl.setBounds(470, 640, 200, 30);
+		loadColl.setBounds(680, 720, 200, 30);
 		loadColl.setText("Load A Collection");
 		loadColl.addActionListener(this);
 		addColl = new JButton();
-		addColl.setBounds(632, 100, 85, 20);
+		addColl.setBounds(1000, 30, 85, 20);
 		addColl.setText("Add Skin");
 		addColl.addActionListener(this);
 		delColl = new JButton();
-		delColl.setBounds(632, 125, 85, 20);
+		delColl.setBounds(1000, 55, 85, 20);
 		delColl.setText("Del Skin");
 		delColl.addActionListener(this);
 		back = new JButton();
-		back.setBounds(310, 640, 65, 40);
+		back.setBounds(535, 720, 65, 40);
 		back.setText("Back");
 		back.addActionListener(this);
 		next = new JButton();
-		next.setBounds(375, 640, 65, 40);
+		next.setBounds(600, 720, 65, 40);
 		next.setText("Next");
 		next.addActionListener(this);
 		skinID = new JTextField();
 		skinID.setText("Skin ID");
-		skinID.setBounds(310, 680, 130, 20);
+		skinID.setBounds(535, 760, 131, 20);
 		skinID.addActionListener(this);
-		size = new JSlider();
-		size.setBounds(287, 590, 175, 19);
-		size.setMinimum(0);
-		size.setMaximum(5);
-		size.addChangeListener(this);
+	
 		setLayout(null);
 
+		add(option3D);
+		add(option2D);
 		add(skinLoadButton);
-		add(view1Button);
-		add(view2Button);
-		add(partMain);
-		add(partHead);
-		add(partBody);
-		add(partArm);
-		add(partLeg);
 		add(text);
 		add(addColl);
 		add(delColl);
@@ -135,26 +104,26 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 		add(next);
 		add(skinID);
 		add(loadColl);
-		add(size);
 	}
 
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 105, 600, 600);
+		
+		g.setColor(Color.BLACK);
+		g.drawRect(-1, 104, 601, 601);
+		g.drawRect(599, 104, 594, 601);
+
 		g.setFont(new Font("arial", 0, 18));
-
-		if(skinName.length()>20)
-		{
-			skinName = skinName.substring(0, 20)+"...";
-		}
-
-		g.drawString("Current Skin: "+skinName, 250, 47);
 
 		if(loader.skinFile!=null)
 		{
-			drawer.drawSkin(g, view, part, loader, !this.skinName.equals("Notch"));
+			drawer.drawSkin(g, Stats2D.view, Stats2D.part, loader, !this.skinName.equals("Notch"));
 		}
-
+		
 		if(Skin3DWorld.skins!=null)
 		{
 			if(loader.skinFile!=null) addColl.setVisible(true);
@@ -168,17 +137,14 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			skinID.setText(Integer.toString(Skin3DWorld.skins.curr));
 		}
 
-		if(this.loader.skinFile!=null&&Skin3DWorld.skins!=null&&Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null&&sync==true)
+		if(this.loader.skinFile!=null&&Skin3DWorld.skins!=null&&Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null&&Stats2D.sync==true)
 		{
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setSkinTexture(loader.skinFile);
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name = skinName;
-			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setPart(part);
-			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setView(view);
-			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].setSize(skinSize);
-			sync = false;
+			Stats2D.sync = false;
 		}
 
-		if(Skin3DWorld.skins!=null) Skin3DWorld.skins.saveCollectionToDisk();
+		if(Skin3DWorld.skins!=null&&MainGui.guiFrame.isEnabled()) Skin3DWorld.skins.saveCollectionToDisk();
 	}
 
 	@Override
@@ -194,57 +160,14 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			if(returnVal==JFileChooser.APPROVE_OPTION&&SkinFileRquirements.isSkinFile(skinFileFinder.getSelectedFile()))
 			{
 				skinName = skinFileFinder.getSelectedFile().getName().substring(0, skinFileFinder.getSelectedFile().getName().length()-4);
-				this.view = 0;
-				this.part = 0;
-				size.setValue(3);
+				Stats2D.view = 0;
+				Stats2D.part = 0;
 
 				loader.setSkinFile(skinFileFinder.getSelectedFile());
 
-				sync = true;
+				Stats2D.sync = true;
 				this.repaint();
 			}
-		}
-		if(event.getSource()==view1Button)
-		{
-			this.view = 0;
-			sync = true;
-			this.repaint();
-		}
-		if(event.getSource()==view2Button)
-		{
-			this.view = 1;
-			sync = true;
-			this.repaint();
-		}
-		if(event.getSource()==partMain)
-		{
-			this.part = 0;
-			sync = true;
-			this.repaint();
-		}
-		if(event.getSource()==partHead)
-		{
-			this.part = 1;
-			sync = true;
-			this.repaint();
-		}
-		if(event.getSource()==partBody)
-		{
-			this.part = 2;
-			sync = true;
-			this.repaint();
-		}
-		if(event.getSource()==partArm)
-		{
-			this.part = 3;
-			sync = true;
-			this.repaint();
-		}
-		if(event.getSource()==partLeg)
-		{
-			this.part = 4;
-			sync = true;
-			this.repaint();
 		}
 		if(event.getSource()==text)
 		{
@@ -256,13 +179,12 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 				if(img!=null)
 				{
 					this.skinName = text.getText();
-					this.view = 0;
-					this.part = 0;
-					size.setValue(3);
+					Stats2D.view = 0;
+					Stats2D.part = 0;
 
 					text.setText("Or type an username!");
 					loader.setSkinFile(img);
-					sync = true;
+					Stats2D.sync = true;
 				}
 			}
 			catch(IOException e)
@@ -286,15 +208,15 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 				Skin3DWorld.skins = new SkinCollection(skinFileFinder.getSelectedFile().getName(), 100);
 			}
 
-			sync = true;
+			Stats2D.sync = true;
 			repaint();
 		}
 		if(event.getSource()==addColl)
 		{
 			Skin3DWorld.saveCollection();
-			Skin3DWorld.skins.setSkin(Skin3DWorld.skins.getNextId(), loader.skinFile, Skin3DWorld.grassTop, Skin3DWorld.grassSide, skinName);
+			Skin3DWorld.skins.setSkin(Skin3DWorld.skins.getNextId(), loader.skinFile, Skin3DWorld.grassTop, Skin3DWorld.grassSide, Skin3DWorld.grassBottom, skinName);
 
-			sync = true;
+			Stats2D.sync = true;
 			repaint();
 		}
 		if(event.getSource()==delColl)
@@ -304,7 +226,7 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 				Skin3DWorld.saveCollection();
 				Skin3DWorld.skins.skins[Skin3DWorld.skins.curr] = null;
 
-				sync = true;
+				Stats2D.sync = true;
 				repaint();
 			}
 		}
@@ -314,21 +236,18 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			{
 				Skin3DWorld.skins.curr++;
 				this.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
-				this.view = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].view;
-				this.part = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].part;
 				this.skinName = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name;
-				this.size.setValue(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].size);
 			}
 			else if(Skin3DWorld.skins.curr<100&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr+1]==null)
 			{
 				Skin3DWorld.skins.curr++;
 				this.loader.skinFile = null;
-				this.view = 0;
-				this.part = 0;
+				Stats2D.view = 0;
+				Stats2D.part = 0;
 				this.skinName = "No Skin Loaded";
-				this.size.setValue(3);
 			}
 
+			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
 			repaint();
 		}
 		if(event.getSource()==back)
@@ -337,20 +256,18 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			{
 				Skin3DWorld.skins.curr--;
 				this.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
-				this.view = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].view;
-				this.part = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].part;
 				this.skinName = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name;
-				this.size.setValue(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].size);
 			}
 			else if(Skin3DWorld.skins.curr>0&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr-1]==null)
 			{
 				Skin3DWorld.skins.curr--;
 				this.loader.skinFile = null;
-				this.view = 0;
-				this.part = 0;
+				Stats2D.view = 0;
+				Stats2D.part = 0;
 				this.skinName = "No Skin Loaded";
-				this.size.setValue(3);
 			}
+		
+			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
 			repaint();
 		}
 		if(event.getSource()==skinID)
@@ -359,8 +276,6 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 			{
 				Skin3DWorld.skins.curr = Integer.parseInt(skinID.getText());
 				this.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
-				this.view = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].view;
-				this.part = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].part;
 				this.skinName = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name;
 			}
 			repaint();
@@ -378,16 +293,15 @@ public class SkinLoader extends JPanel implements ActionListener, ChangeListener
 				FileManager.requestCollection(skinFileFinder.getSelectedFile().getName().substring(0, skinFileFinder.getSelectedFile().getName().length()-11));
 			}
 		}
-	}
-
-	@Override
-	public void stateChanged(ChangeEvent event)
-	{
-		if(event.getSource()==size)
+		if(event.getSource()==option2D)
 		{
-			this.skinSize = size.getValue();
-			this.sync = true;
-			this.repaint();
+			options2D.setupGui();
+			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
+		}
+		if(event.getSource()==option3D)
+		{
+			options3D.setupGui();
+			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
 		}
 	}
 }

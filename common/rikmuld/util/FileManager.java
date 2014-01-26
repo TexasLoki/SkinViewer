@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import rikmuld.main.SkinLoader;
 import rikmuld.main.Start;
+import rikmuld.skin2D.Stats2D;
 import rikmuld.skin3D.skin.SkinCollection;
 import rikmuld.skin3D.world.Skin3DWorld;
 
@@ -53,11 +54,9 @@ public class FileManager {
 						if(Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)
 						{
 							Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
-							Start.gui.panel.part = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].part;
-							Start.gui.panel.view = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].view;
+							Stats2D.part = 0;
+							Stats2D.view = 0;
 							Start.gui.panel.skinName = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name;
-							Start.gui.panel.skinSize = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].size;
-							Start.gui.panel.size.setValue(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].size);
 						}
 
 						Start.gui.panel.repaint();
@@ -124,11 +123,7 @@ public class FileManager {
 			if(Skin3DWorld.skins.skins[0]!=null)
 			{
 				Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[0].skinFile);
-				Start.gui.panel.part = Skin3DWorld.skins.skins[0].part;
-				Start.gui.panel.view = Skin3DWorld.skins.skins[0].view;
 				Start.gui.panel.skinName = Skin3DWorld.skins.skins[0].name;
-				Start.gui.panel.skinSize = Skin3DWorld.skins.skins[0].size;
-				Start.gui.panel.size.setValue(Skin3DWorld.skins.skins[0].size);
 			}
 			Start.gui.panel.repaint();
 		}
@@ -147,11 +142,7 @@ public class FileManager {
 			if(Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)
 			{
 				Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
-				Start.gui.panel.part = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].part;
-				Start.gui.panel.view = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].view;
 				Start.gui.panel.skinName = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name;
-				Start.gui.panel.skinSize = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].size;
-				Start.gui.panel.size.setValue(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].size);
 			}
 
 			Start.gui.panel.repaint();
