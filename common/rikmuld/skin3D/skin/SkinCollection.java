@@ -14,6 +14,8 @@ import org.newdawn.slick.opengl.Texture;
 
 import rikmuld.main.Start;
 import rikmuld.skin2D.Stats2D;
+import rikmuld.skin3D.Stats3D;
+import rikmuld.skin3D.Stats3D.Background;
 import rikmuld.skin3D.world.Skin3DWorld;
 import rikmuld.util.FileManager;
 
@@ -29,6 +31,7 @@ public class SkinCollection {
 	Texture texSide;
 	Texture texBottom;
 	String skinName;
+	public Stats3D stats = new Stats3D();
 
 	public SkinCollection(String name, int size)
 	{
@@ -123,6 +126,8 @@ public class SkinCollection {
 			out.newLine();
 			out.write(Float.toString(Skin3DWorld.camera.rotation.getZ()));
 			out.newLine();
+			out.write(Integer.toString(stats.background.ordinal()));
+			out.newLine();
 
 			for(int i = 0; i<skins.length; i++)
 			{
@@ -167,6 +172,7 @@ public class SkinCollection {
 		File file = new File(FileManager.dir+name+"/"+name+".collection");
 		int skinNum = 0;
 		int current = 0;
+		int background = 0;
 		String[] nameSkin = null;
 		boolean[][] skinPart = null;
 		boolean[] hasBlock = null;
@@ -191,7 +197,8 @@ public class SkinCollection {
 				Skin3DWorld.camera.rotation.x = Float.parseFloat(scanner.next());
 				Skin3DWorld.camera.rotation.y = Float.parseFloat(scanner.next());
 				Skin3DWorld.camera.rotation.z = Float.parseFloat(scanner.next());
-
+				background = Integer.parseInt(scanner.next());
+				
 				Skin3DWorld.camera.setVector[0] = true;
 				Skin3DWorld.camera.setVector[1] = true;
 
@@ -243,6 +250,7 @@ public class SkinCollection {
 				}
 
 				collect.skins = skin;
+				collect.stats.background = Background.values()[background];
 				Skin3DWorld.skins = collect;
 				Skin3DWorld.skins.curr = current;
 				collect.saveCollectionToDisk();

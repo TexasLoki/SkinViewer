@@ -17,13 +17,15 @@ import rikmuld.main.MainGui;
 import rikmuld.skin3D.skin.Skin;
 import rikmuld.skin3D.skin.SkinCollection;
 import rikmuld.util.FileManager;
+import rikmuld.util.ImageCreator;
 
 public class Skin3DWorld implements Runnable {
 
 	boolean[] keys = new boolean[256];
 	public static Camera camera;
-	public static Texture grassTop, grassSide, grassBottom, background1;
+	public static Texture grassTop, grassSide, grassBottom;
 	boolean flag = false, saveFlag = false;
+	public Texture[] background = new Texture[1];
 	public static Skin3DWorld thread = null;
 	public static SkinCollection skins;
 	static boolean request = false;
@@ -52,7 +54,7 @@ public class Skin3DWorld implements Runnable {
 			grassSide = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassSide.png"));
 			grassBottom = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassBottom.png"));
 			
-			background1 = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/background1.png"));
+			background[0] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/backgroundGrass.png"));
 		}
 		catch(Exception e)
 		{
@@ -62,29 +64,32 @@ public class Skin3DWorld implements Runnable {
 
 	public void drawBackground()
 	{
-		this.setup2DDisplay();
+		if(skins.stats.background.ordinal()<background.length)
+		{
+			this.setup2DDisplay();
 		
-		background1.bind();
-		
-		GL11.glPushMatrix();
-
-		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2f(0, 0);
-
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex2f(1, 0);
-
-		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex2f(1, 1);
-
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex2f(0, 1);
-		
-		GL11.glEnd();
-		
-		GL11.glPopMatrix();
+			background[skins.stats.background.ordinal()].bind();
+			
+			GL11.glPushMatrix();
+	
+			GL11.glBegin(GL11.GL_QUADS);
+			
+			GL11.glTexCoord2f(0, 0);
+			GL11.glVertex2f(0, 0);
+	
+			GL11.glTexCoord2f(1, 0);
+			GL11.glVertex2f(1, 0);
+	
+			GL11.glTexCoord2f(1, 1);
+			GL11.glVertex2f(1, 1);
+	
+			GL11.glTexCoord2f(0, 1);
+			GL11.glVertex2f(0, 1);
+			
+			GL11.glEnd();
+			
+			GL11.glPopMatrix();
+		}
 	}
 	
 	public void render()
@@ -124,6 +129,8 @@ public class Skin3DWorld implements Runnable {
 
 		mapKeys();
 		camera.update();
+		
+		if(ImageCreator.shot)ImageCreator.makeScreenshot();
 	}
 
 	private void mapKeys()
@@ -192,7 +199,7 @@ public class Skin3DWorld implements Runnable {
 	{
 		try
 		{
-			Display.setDisplayMode(new DisplayMode(750, 750));
+			Display.setDisplayMode(new DisplayMode(600, 600));
 			Display.create();
 			Display.setParent(MainGui.canvas);
 		}
@@ -210,7 +217,7 @@ public class Skin3DWorld implements Runnable {
 		Display.setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().width/1.8), Toolkit.getDefaultToolkit().getScreenSize().height/6);
 
 		FileManager.startUp();
-
+		
 		while(!Display.isCloseRequested())
 		{
 			this.render();

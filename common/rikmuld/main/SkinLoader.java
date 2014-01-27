@@ -17,14 +17,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import rikmuld.skin2D.Options2D;
 import rikmuld.skin2D.SkinDrawer2D;
 import rikmuld.skin2D.Stats2D;
 import rikmuld.skin2D.TextureLoader2D;
-import rikmuld.skin3D.Options3D;
 import rikmuld.skin3D.skin.SkinCollection;
 import rikmuld.skin3D.world.Skin3DWorld;
 import rikmuld.util.FileManager;
+import rikmuld.util.ImageCreator;
 import rikmuld.util.SkinFileRquirements;
 import rikmuld.util.fileFilter.FileFilterCollection;
 import rikmuld.util.fileFilter.FileFilterPng;
@@ -35,25 +34,24 @@ public class SkinLoader extends JPanel implements ActionListener {
 	URL url;
 	public String skinName = "No Skin Loaded";
 	public static JFileChooser skinFileFinder = new JFileChooser();
-	JButton option3D, option2D, skinLoadButton, createCollection, addColl, delColl, back, next, loadColl;
+	JButton option, img, skinLoadButton, createCollection, addColl, delColl, back, next, loadColl;
 	SkinDrawer2D drawer = new SkinDrawer2D();
 	public TextureLoader2D loader = new TextureLoader2D();
 	JTextField text, skinID;
-	Options3D options3D = new Options3D();
-	Options2D options2D = new Options2D();
+	Options options = new Options();
 
 	public SkinLoader()
 	{
 		super();
 
-		option3D = new JButton();
-		option3D.setBounds(25, 25, 150, 25);
-		option3D.setText("3D Options");
-		option3D.addActionListener(this);
-		option2D = new JButton();
-		option2D.setBounds(25, 55, 150, 25);
-		option2D.setText("2D Options");
-		option2D.addActionListener(this);
+		option = new JButton();
+		option.setBounds(25, 25, 150, 25);
+		option.setText("Options");
+		option.addActionListener(this);
+		img = new JButton();
+		img.setBounds(25, 55, 150, 25);
+		img.setText("Save 3D View");
+		img.addActionListener(this);
 		skinLoadButton = new JButton();
 		skinLoadButton.setBounds(500, 25, 200, 30);
 		skinLoadButton.setText("Load A New Skin File");
@@ -93,8 +91,8 @@ public class SkinLoader extends JPanel implements ActionListener {
 	
 		setLayout(null);
 
-		add(option3D);
-		add(option2D);
+		add(option);
+		add(img);
 		add(skinLoadButton);
 		add(text);
 		add(addColl);
@@ -247,7 +245,7 @@ public class SkinLoader extends JPanel implements ActionListener {
 				this.skinName = "No Skin Loaded";
 			}
 
-			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
+			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options.panel.reload();
 			repaint();
 		}
 		if(event.getSource()==back)
@@ -267,7 +265,7 @@ public class SkinLoader extends JPanel implements ActionListener {
 				this.skinName = "No Skin Loaded";
 			}
 		
-			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
+			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options.panel.reload();
 			repaint();
 		}
 		if(event.getSource()==skinID)
@@ -293,15 +291,14 @@ public class SkinLoader extends JPanel implements ActionListener {
 				FileManager.requestCollection(skinFileFinder.getSelectedFile().getName().substring(0, skinFileFinder.getSelectedFile().getName().length()-11));
 			}
 		}
-		if(event.getSource()==option2D)
+		if(event.getSource()==img)
 		{
-			options2D.setupGui();
-			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
+			ImageCreator.requestScreenshot();
 		}
-		if(event.getSource()==option3D)
+		if(event.getSource()==option)
 		{
-			options3D.setupGui();
-			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options3D.panel.reload();
+			options.setupGui();
+			if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)options.panel.reload();
 		}
 	}
 }

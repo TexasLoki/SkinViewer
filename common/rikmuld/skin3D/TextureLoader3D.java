@@ -15,7 +15,7 @@ public class TextureLoader3D extends TextureLoader2D {
 	public Texture[] body3D = new Texture[6];
 	public Texture[] arm3D = new Texture[6];
 	public Texture[] leg3D = new Texture[6];
-
+	
 	public TextureLoader3D(BufferedImage img)
 	{
 		this.setSkinFile(img);

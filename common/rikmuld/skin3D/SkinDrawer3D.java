@@ -3,7 +3,7 @@ package rikmuld.skin3D;
 import org.lwjgl.opengl.GL11;
 
 public class SkinDrawer3D {
-
+	
 	public static void drawLeftLeg(TextureLoader3D loader, boolean flipped)
 	{
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
