@@ -293,7 +293,16 @@ public class SkinLoader extends JPanel implements ActionListener {
 		}
 		if(event.getSource()==img)
 		{
-			ImageCreator.requestScreenshot();
+			skinFileFinder.setAcceptAllFileFilterUsed(false);
+			skinFileFinder.setCurrentDirectory(new File(FileManager.dir));
+			skinFileFinder.setFileFilter(new FileFilterPng());
+
+			int returnVal = skinFileFinder.showSaveDialog(SkinLoader.this);
+
+			if(returnVal==JFileChooser.APPROVE_OPTION)
+			{
+				ImageCreator.requestScreenshot(skinFileFinder.getSelectedFile());
+			}
 		}
 		if(event.getSource()==option)
 		{

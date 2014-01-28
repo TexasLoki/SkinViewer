@@ -16,7 +16,7 @@ import rikmuld.skin3D.world.Skin3DWorld;
 
 public class FileManager {
 
-	public static String dir = SkinLoader.skinFileFinder.getFileSystemView().getDefaultDirectory()+"/SkinViewer/";
+	public static String dir = SkinLoader.skinFileFinder.getFileSystemView().getDefaultDirectory()+"/SkinViewer_1.1/";
 	private static String request;
 
 	public static void startUp()
