@@ -9,7 +9,7 @@ public class FileFilterPng extends FileFilter {
 	@Override
 	public boolean accept(File f)
 	{
-		return f.getName().endsWith("png")||f.isDirectory();
+		return f.getName().endsWith("png") || f.isDirectory();
 	}
 
 	@Override

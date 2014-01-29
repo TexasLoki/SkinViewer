@@ -16,30 +16,36 @@ import rikmuld.skin3D.world.Skin3DWorld;
 
 public class FileManager {
 
-	public static String dir = SkinLoader.skinFileFinder.getFileSystemView().getDefaultDirectory()+"/SkinViewer_1.1/";
+	public static String dir = SkinLoader.skinFileFinder.getFileSystemView().getDefaultDirectory() + "/SkinViewer_1.1/";
 	private static String request;
 
-	public static void startUp()
+	public static void createDefaultCollection()
 	{
-		if(!propsExist())
-		{
-			createProps();
-			if(loadDefaultCollection()==false) createDefaultCollection();
-		}
-		else
-		{
-			if(!getCollection())
-			{
-				if(loadDefaultCollection()==false) createDefaultCollection();
-			}
-		}
+		Skin3DWorld.skins = new SkinCollection("default", 100);
+	}
 
-		Start.gui.panel.repaint();
+	public static void createProps()
+	{
+		(new File(FileManager.dir)).mkdir();
+
+		File file = new File(FileManager.dir + "props.info");
+
+		try
+		{
+			file.createNewFile();
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			out.write("default");
+			out.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static boolean getCollection()
 	{
-		File file = new File(FileManager.dir+"props.info");
+		File file = new File(FileManager.dir + "props.info");
 		if(file.exists())
 		{
 			try
@@ -51,7 +57,7 @@ public class FileManager {
 					{
 						scanner.close();
 
-						if(Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)
+						if((Skin3DWorld.skins.curr != -1) && (Skin3DWorld.skins.skins[Skin3DWorld.skins.curr] != null))
 						{
 							Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
 							Stats2D.part = 0;
@@ -73,28 +79,49 @@ public class FileManager {
 		return false;
 	}
 
-	public static void createProps()
+	public static boolean loadCollection(String name)
 	{
-		(new File(FileManager.dir)).mkdir();
-
-		File file = new File(FileManager.dir+"props.info");
-
-		try
+		if(SkinCollection.loadCollectionFromDisk(name))
 		{
-			file.createNewFile();
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			out.write("default");
-			out.close();
+			if((Skin3DWorld.skins.curr != -1) && (Skin3DWorld.skins.skins[Skin3DWorld.skins.curr] != null))
+			{
+				Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
+				Start.gui.panel.skinName = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name;
+			}
+
+			Start.gui.panel.repaint();
+			return true;
 		}
-		catch(IOException e)
+		return false;
+	}
+
+	public static boolean loadDefaultCollection()
+	{
+		if(SkinCollection.loadCollectionFromDisk("default"))
 		{
-			e.printStackTrace();
+			if(Skin3DWorld.skins.skins[0] != null)
+			{
+				Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[0].skinFile);
+				Start.gui.panel.skinName = Skin3DWorld.skins.skins[0].name;
+			}
+			Start.gui.panel.repaint();
 		}
+		return false;
+	}
+
+	public static boolean propsExist()
+	{
+		return (new File(dir + "props.info")).exists();
+	}
+
+	public static void requestCollection(String string)
+	{
+		request = string;
 	}
 
 	public static void saveProps()
 	{
-		File file = new File(FileManager.dir+"props.info");
+		File file = new File(FileManager.dir + "props.info");
 
 		file.delete();
 
@@ -111,54 +138,33 @@ public class FileManager {
 		}
 	}
 
-	public static void createDefaultCollection()
+	public static void startUp()
 	{
-		Skin3DWorld.skins = new SkinCollection("default", 100);
-	}
-
-	public static boolean loadDefaultCollection()
-	{
-		if(SkinCollection.loadCollectionFromDisk("default"))
+		if(!propsExist())
 		{
-			if(Skin3DWorld.skins.skins[0]!=null)
+			createProps();
+			if(loadDefaultCollection() == false)
 			{
-				Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[0].skinFile);
-				Start.gui.panel.skinName = Skin3DWorld.skins.skins[0].name;
+				createDefaultCollection();
 			}
-			Start.gui.panel.repaint();
 		}
-		return false;
-	}
-
-	public static boolean propsExist()
-	{
-		return (new File(dir+"props.info")).exists();
-	}
-
-	public static boolean loadCollection(String name)
-	{
-		if(SkinCollection.loadCollectionFromDisk(name))
+		else
 		{
-			if(Skin3DWorld.skins.curr!=-1&&Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)
+			if(!getCollection())
 			{
-				Start.gui.panel.loader.setSkinFile(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinFile);
-				Start.gui.panel.skinName = Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].name;
+				if(loadDefaultCollection() == false)
+				{
+					createDefaultCollection();
+				}
 			}
-
-			Start.gui.panel.repaint();
-			return true;
 		}
-		return false;
-	}
 
-	public static void requestCollection(String string)
-	{
-		request = string;
+		Start.gui.panel.repaint();
 	}
 
 	public static void updateRequest()
 	{
-		if(request!="")
+		if(request != "")
 		{
 			loadCollection(request);
 			request = "";

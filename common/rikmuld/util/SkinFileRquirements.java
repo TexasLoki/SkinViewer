@@ -8,20 +8,9 @@ import javax.imageio.ImageIO;
 
 public class SkinFileRquirements {
 
-	public static boolean isSkinFile(File file)
+	private static boolean hasGoodAspectRatio(BufferedImage skinFile)
 	{
-		if(isPngFile(file)&&hasGoodAspectRatio(file)) return true;
-		return false;
-	}
-
-	public static boolean isSkinFile(BufferedImage file)
-	{
-		return hasGoodAspectRatio(file);
-	}
-
-	private static boolean isPngFile(File file)
-	{
-		if(file.getName().substring(file.getName().length()-4, file.getName().length()).equals(".png")) return true;
+		if(((skinFile.getHeight() % 32) == 0) && ((skinFile.getWidth() % 64) == 0) && ((skinFile.getWidth() / skinFile.getHeight()) == 2)) return true;
 		else return false;
 	}
 
@@ -42,9 +31,20 @@ public class SkinFileRquirements {
 		return hasGoodAspectRatio(skinFile);
 	}
 
-	private static boolean hasGoodAspectRatio(BufferedImage skinFile)
+	private static boolean isPngFile(File file)
 	{
-		if(skinFile.getHeight()%32==0&&skinFile.getWidth()%64==0&&skinFile.getWidth()/skinFile.getHeight()==2) return true;
+		if(file.getName().substring(file.getName().length() - 4, file.getName().length()).equals(".png")) return true;
 		else return false;
+	}
+
+	public static boolean isSkinFile(BufferedImage file)
+	{
+		return hasGoodAspectRatio(file);
+	}
+
+	public static boolean isSkinFile(File file)
+	{
+		if(isPngFile(file) && hasGoodAspectRatio(file)) return true;
+		return false;
 	}
 }

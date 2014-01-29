@@ -21,155 +21,10 @@ import rikmuld.util.FileManager;
 
 public class SkinCollection {
 
-	public int curr = 0;
-	String name;
-	public Skin[] skins;
-
-	int id = -1;
-	BufferedImage img;
-	Texture texTop;
-	Texture texSide;
-	Texture texBottom;
-	String skinName;
-	public Stats3D stats = new Stats3D();
-
-	public SkinCollection(String name, int size)
-	{
-		this.name = name.replaceAll("\\s", "");
-		skins = new Skin[size];
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setSkin(int id, BufferedImage img, Texture texTop, Texture texSide, Texture texBottom, String name)
-	{
-		this.curr = id;
-		this.id = id;
-		this.img = img;
-		this.texTop = texTop;
-		this.texSide = texSide;
-		this.texBottom = texBottom;
-		this.skinName = name;
-	}
-
-	public int getNextId()
-	{
-		int i = 0;
-		for(Skin skin : skins)
-		{
-			if(skin==null) return i;
-			i++;
-		}
-		return -1;
-	}
-
-	public void updateSkins()
-	{
-		if(this.id!=-1)
-		{
-			skins[id] = new Skin(img, id, texTop, texSide, texBottom, skinName, this);
-			this.id = -1;
-			this.img = null;
-			this.texTop = null;
-			this.texSide = null;
-			this.skinName = "";
-
-			this.saveCollectionToDisk();
-			Stats2D.sync = true;
-			Start.gui.panel.repaint();
-		}
-	}
-
-	public void saveCollectionToDisk()
-	{
-		FileManager.saveProps();
-
-		(new File(FileManager.dir)).mkdir();
-		(new File(FileManager.dir+this.name)).mkdir();
-
-		for(File file2 : new File(FileManager.dir+this.name).listFiles())
-		{
-			file2.delete();
-		}
-
-		File file = new File(FileManager.dir+this.name+"/"+this.name+".collection");
-
-		try
-		{
-			file.createNewFile();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		try
-		{
-			BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			out.write(Integer.toString(this.skins.length));
-			out.newLine();
-			out.write(Integer.toString(this.curr)+"\n");
-			out.newLine();
-
-			out.write(Float.toString(Skin3DWorld.camera.vector.getX()));
-			out.newLine();
-			out.write(Float.toString(Skin3DWorld.camera.vector.getY()));
-			out.newLine();
-			out.write(Float.toString(Skin3DWorld.camera.vector.getZ()));
-			out.newLine();
-			out.write(Float.toString(Skin3DWorld.camera.rotation.getX()));
-			out.newLine();
-			out.write(Float.toString(Skin3DWorld.camera.rotation.getY()));
-			out.newLine();
-			out.write(Float.toString(Skin3DWorld.camera.rotation.getZ()));
-			out.newLine();
-			out.write(Integer.toString(stats.background.ordinal()));
-			out.newLine();
-
-			for(int i = 0; i<skins.length; i++)
-			{
-				if(skins[i]!=null)
-				{
-					out.write(skins[i].name.replaceAll("\\s", ""));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.head));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.headWear));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.body));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.armL));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.armR));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.legL));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.legR));
-					out.newLine();
-					out.write(Boolean.toString(skins[i].stats.hasBlock));
-					out.newLine();
-
-					String fileName = this.name+"/"+skins[i].name+".png";
-
-					ImageIO.write(skins[i].skinFile, "png", (new File(FileManager.dir+fileName.replaceAll("\\s", ""))));
-				}
-			}
-
-			out.close();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	public static boolean loadCollectionFromDisk(String name)
 	{
 		SkinCollection collect = null;
-		File file = new File(FileManager.dir+name+"/"+name+".collection");
+		File file = new File(FileManager.dir + name + "/" + name + ".collection");
 		int skinNum = 0;
 		int current = 0;
 		int background = 0;
@@ -198,11 +53,11 @@ public class SkinCollection {
 				Skin3DWorld.camera.rotation.y = Float.parseFloat(scanner.next());
 				Skin3DWorld.camera.rotation.z = Float.parseFloat(scanner.next());
 				background = Integer.parseInt(scanner.next());
-				
+
 				Skin3DWorld.camera.setVector[0] = true;
 				Skin3DWorld.camera.setVector[1] = true;
 
-				for(int j = 0; j<skinNum; j++)
+				for(int j = 0; j < skinNum; j++)
 				{
 					if(scanner.hasNext())
 					{
@@ -226,15 +81,15 @@ public class SkinCollection {
 
 			try
 			{
-				collect = new SkinCollection(name, (skinNum==0) ? 1 : 100);
+				collect = new SkinCollection(name, (skinNum == 0)? 1:100);
 
 				skin = new Skin[skinNum];
 
-				for(int i = 0; i<skinNum; i++)
+				for(int i = 0; i < skinNum; i++)
 				{
-					if(nameSkin[i]!=null)
+					if(nameSkin[i] != null)
 					{
-						BufferedImage skinFile = ImageIO.read((new File(FileManager.dir+name+"/"+nameSkin[i]+".png")));
+						BufferedImage skinFile = ImageIO.read((new File(FileManager.dir + name + "/" + nameSkin[i] + ".png")));
 						String nameS = nameSkin[i];
 
 						skin[i] = new Skin(skinFile, i, Skin3DWorld.grassTop, Skin3DWorld.grassSide, Skin3DWorld.grassBottom, nameS, collect);
@@ -263,5 +118,150 @@ public class SkinCollection {
 			}
 		}
 		return false;
+	}
+	public int curr = 0;
+	String name;
+
+	public Skin[] skins;
+	int id = -1;
+	BufferedImage img;
+	Texture texTop;
+	Texture texSide;
+	Texture texBottom;
+	String skinName;
+
+	public Stats3D stats = new Stats3D();
+
+	public SkinCollection(String name, int size)
+	{
+		this.name = name.replaceAll("\\s", "");
+		skins = new Skin[size];
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public int getNextId()
+	{
+		int i = 0;
+		for(Skin skin: skins)
+		{
+			if(skin == null) return i;
+			i++;
+		}
+		return -1;
+	}
+
+	public void saveCollectionToDisk()
+	{
+		FileManager.saveProps();
+
+		(new File(FileManager.dir)).mkdir();
+		(new File(FileManager.dir + name)).mkdir();
+
+		for(File file2: new File(FileManager.dir + name).listFiles())
+		{
+			file2.delete();
+		}
+
+		File file = new File(FileManager.dir + name + "/" + name + ".collection");
+
+		try
+		{
+			file.createNewFile();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		try
+		{
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			out.write(Integer.toString(skins.length));
+			out.newLine();
+			out.write(Integer.toString(curr) + "\n");
+			out.newLine();
+
+			out.write(Float.toString(Skin3DWorld.camera.vector.getX()));
+			out.newLine();
+			out.write(Float.toString(Skin3DWorld.camera.vector.getY()));
+			out.newLine();
+			out.write(Float.toString(Skin3DWorld.camera.vector.getZ()));
+			out.newLine();
+			out.write(Float.toString(Skin3DWorld.camera.rotation.getX()));
+			out.newLine();
+			out.write(Float.toString(Skin3DWorld.camera.rotation.getY()));
+			out.newLine();
+			out.write(Float.toString(Skin3DWorld.camera.rotation.getZ()));
+			out.newLine();
+			out.write(Integer.toString(stats.background.ordinal()));
+			out.newLine();
+
+			for(int i = 0; i < skins.length; i++)
+			{
+				if(skins[i] != null)
+				{
+					out.write(skins[i].name.replaceAll("\\s", ""));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.head));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.headWear));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.body));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.armL));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.armR));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.legL));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.legR));
+					out.newLine();
+					out.write(Boolean.toString(skins[i].stats.hasBlock));
+					out.newLine();
+
+					String fileName = name + "/" + skins[i].name + ".png";
+
+					ImageIO.write(skins[i].skinFile, "png", (new File(FileManager.dir + fileName.replaceAll("\\s", ""))));
+				}
+			}
+
+			out.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void setSkin(int id, BufferedImage img, Texture texTop, Texture texSide, Texture texBottom, String name)
+	{
+		curr = id;
+		this.id = id;
+		this.img = img;
+		this.texTop = texTop;
+		this.texSide = texSide;
+		this.texBottom = texBottom;
+		skinName = name;
+	}
+
+	public void updateSkins()
+	{
+		if(id != -1)
+		{
+			skins[id] = new Skin(img, id, texTop, texSide, texBottom, skinName, this);
+			id = -1;
+			img = null;
+			texTop = null;
+			texSide = null;
+			skinName = "";
+
+			saveCollectionToDisk();
+			Stats2D.sync = true;
+			Start.gui.panel.repaint();
+		}
 	}
 }

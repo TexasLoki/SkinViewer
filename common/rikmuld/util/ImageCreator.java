@@ -15,23 +15,23 @@ public class ImageCreator {
 
 	public static boolean shot = false;
 	private static File imgFile;
-	
+
 	public static void makeScreenshot()
 	{
 		shot = false;
 
 		GL11.glReadBuffer(GL11.GL_FRONT);
 		int width = Display.getDisplayMode().getWidth();
-		int height= Display.getDisplayMode().getHeight();
+		int height = Display.getDisplayMode().getHeight();
 		int bytesPerPixel = 4;
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bytesPerPixel);
 		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-				
+
 		if(!imgFile.getName().endsWith(".png"))
 		{
-			imgFile = new File(imgFile.getAbsolutePath()+".png");
+			imgFile = new File(imgFile.getAbsolutePath() + ".png");
 		}
-		
+
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		for(int x = 0; x < width; x++)
 		{
@@ -44,13 +44,13 @@ public class ImageCreator {
 				image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
 			}
 		}
-		
-		try 
+
+		try
 		{
 			ImageIO.write(image, "png", imgFile);
-		} 
-		catch (IOException e) 
-		{ 
+		}
+		catch(IOException e)
+		{
 			e.printStackTrace();
 		}
 	}

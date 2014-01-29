@@ -36,14 +36,50 @@ public class Skin3DWorld implements Runnable {
 		(new Thread(thread)).start();
 	}
 
+	public static void requestDefaultCollection()
+	{
+		request = true;
+	}
+
 	public static void saveCollection()
 	{
 		skins.saveCollectionToDisk();
 	}
 
-	public static void requestDefaultCollection()
+	public void clearScreen()
 	{
-		request = true;
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glLoadIdentity();
+	}
+
+	public void drawBackground()
+	{
+		if(skins.stats.background.ordinal() < background.length)
+		{
+			setup2DDisplay();
+
+			background[skins.stats.background.ordinal()].bind();
+
+			GL11.glPushMatrix();
+
+			GL11.glBegin(GL11.GL_QUADS);
+
+			GL11.glTexCoord2f(0, 0);
+			GL11.glVertex2f(0, 0);
+
+			GL11.glTexCoord2f(1, 0);
+			GL11.glVertex2f(1, 0);
+
+			GL11.glTexCoord2f(1, 1);
+			GL11.glVertex2f(1, 1);
+
+			GL11.glTexCoord2f(0, 1);
+			GL11.glVertex2f(0, 1);
+
+			GL11.glEnd();
+
+			GL11.glPopMatrix();
+		}
 	}
 
 	private void loadTextures()
@@ -53,7 +89,7 @@ public class Skin3DWorld implements Runnable {
 			grassTop = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassTop.png"));
 			grassSide = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassSide.png"));
 			grassBottom = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/grassBottom.png"));
-			
+
 			background[0] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("textures/backgroundGrass.png"));
 		}
 		catch(Exception e)
@@ -62,136 +98,44 @@ public class Skin3DWorld implements Runnable {
 		}
 	}
 
-	public void drawBackground()
-	{
-		if(skins.stats.background.ordinal()<background.length)
-		{
-			this.setup2DDisplay();
-		
-			background[skins.stats.background.ordinal()].bind();
-			
-			GL11.glPushMatrix();
-	
-			GL11.glBegin(GL11.GL_QUADS);
-			
-			GL11.glTexCoord2f(0, 0);
-			GL11.glVertex2f(0, 0);
-	
-			GL11.glTexCoord2f(1, 0);
-			GL11.glVertex2f(1, 0);
-	
-			GL11.glTexCoord2f(1, 1);
-			GL11.glVertex2f(1, 1);
-	
-			GL11.glTexCoord2f(0, 1);
-			GL11.glVertex2f(0, 1);
-			
-			GL11.glEnd();
-			
-			GL11.glPopMatrix();
-		}
-	}
-	
-	public void render()
-	{
-		clearScreen();
-		
-		this.drawBackground();
-		this.setup3DDisplay();
-		
-		camera.translatePostion();
-		skins.updateSkins();
-
-		for(Skin skin : skins.skins)
-		{
-			if(skin!=null) skin.renderUpdate();
-		}
-	}
-
-	public void update()
-	{
-		if(request)
-		{
-			request = false;
-			FileManager.loadDefaultCollection();
-		}
-
-		if(Display.isActive())
-		{
-			if(camera.mouseClose==true) Mouse.setGrabbed(true);
-			if(this.saveFlag==true) this.saveFlag = false;
-		}
-		if(!Display.isActive()&&saveFlag==false)
-		{
-			this.saveFlag = true;
-			saveCollection();
-		}
-
-		mapKeys();
-		camera.update();
-		
-		if(ImageCreator.shot)ImageCreator.makeScreenshot();
-	}
-
 	private void mapKeys()
 	{
-		for(int i = 0; i<keys.length; i++)
+		for(int i = 0; i < keys.length; i++)
 		{
 			keys[i] = Keyboard.isKeyDown(i);
 		}
-		if(flag==false&&Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+		if((flag == false) && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
 		{
-			if(camera.mouseClose) camera.mouseClose = false;
-			else camera.mouseClose = true;
+			if(camera.mouseClose)
+			{
+				camera.mouseClose = false;
+			}
+			else
+			{
+				camera.mouseClose = true;
+			}
 		}
 		flag = Keyboard.isKeyDown(Keyboard.KEY_ESCAPE);
 
 	}
 
-	public void setup3DDisplay()
+	public void render()
 	{
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
+		clearScreen();
 
-		GLU.gluPerspective((float) 100, 1, 0.001f, 750);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		drawBackground();
+		setup3DDisplay();
 
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		camera.translatePostion();
+		skins.updateSkins();
 
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
-
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		GL11.glClearColor(1.0f, 1.0f, 1.0f, 0f);
-		GL11.glClearDepth(1.0f);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
-	}
-	
-	public void setup2DDisplay()
-	{
-		GL11.glEnable(GL11.GL_TEXTURE_2D);		
-		GL11.glEnable(GL11.GL_BLEND); 
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);	
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glClearColor(1, 1, 1, 1);
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, 1, 1, 0, -1, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glViewport(0, 0, 600, 600); 	
-	}
-
-	public void clearScreen()
-	{
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glLoadIdentity();
+		for(Skin skin: skins.skins)
+		{
+			if(skin != null)
+			{
+				skin.renderUpdate();
+			}
+		}
 	}
 
 	@Override
@@ -210,18 +154,18 @@ public class Skin3DWorld implements Runnable {
 
 		Display.setTitle("RikMuld's 3D Skin Viewer");
 
-		this.setup3DDisplay();
+		setup3DDisplay();
 
 		camera = new Camera(this);
 		loadTextures();
-		Display.setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().width/1.8), Toolkit.getDefaultToolkit().getScreenSize().height/6);
+		Display.setLocation((int)(Toolkit.getDefaultToolkit().getScreenSize().width / 1.8), Toolkit.getDefaultToolkit().getScreenSize().height / 6);
 
 		FileManager.startUp();
-		
+
 		while(!Display.isCloseRequested())
 		{
-			this.render();
-			this.update();
+			render();
+			update();
 			FileManager.updateRequest();
 			Display.update();
 			Display.sync(90);
@@ -230,5 +174,79 @@ public class Skin3DWorld implements Runnable {
 
 		Display.destroy();
 		System.exit(0);
+	}
+
+	public void setup2DDisplay()
+	{
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glClearColor(1, 1, 1, 1);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, 1, 1, 0, -1, 1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		GL11.glViewport(0, 0, 600, 600);
+	}
+
+	public void setup3DDisplay()
+	{
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+
+		GLU.gluPerspective(100, 1, 0.001f, 750);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GL11.glClearColor(1.0f, 1.0f, 1.0f, 0f);
+		GL11.glClearDepth(1.0f);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
+	}
+
+	public void update()
+	{
+		if(request)
+		{
+			request = false;
+			FileManager.loadDefaultCollection();
+		}
+
+		if(Display.isActive())
+		{
+			if(camera.mouseClose == true)
+			{
+				Mouse.setGrabbed(true);
+			}
+			if(saveFlag == true)
+			{
+				saveFlag = false;
+			}
+		}
+		if(!Display.isActive() && (saveFlag == false))
+		{
+			saveFlag = true;
+			saveCollection();
+		}
+
+		mapKeys();
+		camera.update();
+
+		if(ImageCreator.shot)
+		{
+			ImageCreator.makeScreenshot();
+		}
 	}
 }

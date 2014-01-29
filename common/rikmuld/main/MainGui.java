@@ -24,7 +24,7 @@ public class MainGui {
 		guiFrame.setLocationRelativeTo(null);
 		guiFrame.setVisible(true);
 		guiFrame.setResizable(false);
-		guiFrame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width/4, Toolkit.getDefaultToolkit().getScreenSize().height/8);
+		guiFrame.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 4, Toolkit.getDefaultToolkit().getScreenSize().height / 8);
 
 		panel.setVisible(true);
 

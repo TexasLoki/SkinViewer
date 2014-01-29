@@ -9,7 +9,7 @@ public class FileFilterCollection extends FileFilter {
 	@Override
 	public boolean accept(File f)
 	{
-		return f.getName().endsWith("collection")||f.isDirectory();
+		return f.getName().endsWith("collection") || f.isDirectory();
 	}
 
 	@Override

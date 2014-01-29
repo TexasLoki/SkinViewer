@@ -9,6 +9,6 @@ public class SkinStats {
 	public boolean armR = true;
 	public boolean legL = true;
 	public boolean legR = true;
-	
+
 	public boolean hasBlock = true;
 }

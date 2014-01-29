@@ -17,17 +17,18 @@ import rikmuld.skin3D.world.Skin3DWorld;
 @SuppressWarnings("serial")
 public class OptionsPanel extends JPanel implements ActionListener, ItemListener {
 
-	JButton view1Button, view2Button, partMain, partHead, partBody, partArm, partLeg;
+	JButton view1Button, view2Button, partMain, partHead, partBody, partArm,
+	partLeg;
 
-	public Checkbox head = new Checkbox("Display Head", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.head:true));
-	public Checkbox headWear = new Checkbox("Display Headwear", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.headWear:true));
-	public Checkbox body = new Checkbox("Display Body", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.body:true));
-	public Checkbox armL = new Checkbox("Display Left Arm", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armL:true));
-	public Checkbox armR = new Checkbox("Display Right Arm", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armR:true));
-	public Checkbox legL = new Checkbox("Display Left Leg", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legL:true));
-	public Checkbox legR = new Checkbox("Display Right Leg", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legR:true));
-	public Checkbox block = new Checkbox("Display Block", Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.hasBlock:true));
-	public Checkbox background = new Checkbox("Display Background", Skin3DWorld.skins==null? false:Skin3DWorld.skins.stats.background.ordinal()==0);
+	public Checkbox head = new Checkbox("Display Head", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.head:true));
+	public Checkbox headWear = new Checkbox("Display Headwear", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.headWear:true));
+	public Checkbox body = new Checkbox("Display Body", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.body:true));
+	public Checkbox armL = new Checkbox("Display Left Arm", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armL:true));
+	public Checkbox armR = new Checkbox("Display Right Arm", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armR:true));
+	public Checkbox legL = new Checkbox("Display Left Leg", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legL:true));
+	public Checkbox legR = new Checkbox("Display Right Leg", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legR:true));
+	public Checkbox block = new Checkbox("Display Block", Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.hasBlock:true));
+	public Checkbox background = new Checkbox("Display Background", Skin3DWorld.skins == null? false:Skin3DWorld.skins.stats.background.ordinal() == 0);
 
 	public OptionsPanel()
 	{
@@ -61,7 +62,7 @@ public class OptionsPanel extends JPanel implements ActionListener, ItemListener
 		partLeg.setBounds(152, 85, 100, 30);
 		partLeg.setText("Leg View");
 		partLeg.addActionListener(this);
-	
+
 		head.setBounds(25, 280, 150, 25);
 		headWear.setBounds(25, 305, 150, 25);
 		body.setBounds(25, 330, 150, 25);
@@ -81,7 +82,7 @@ public class OptionsPanel extends JPanel implements ActionListener, ItemListener
 		legR.addItemListener(this);
 		block.addItemListener(this);
 		background.addItemListener(this);
-		
+
 		setLayout(null);
 
 		add(view1Button);
@@ -102,68 +103,57 @@ public class OptionsPanel extends JPanel implements ActionListener, ItemListener
 		add(background);
 	}
 
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
-		
-		g.drawString("2D Viewer Options", 25, 25);
-		g.drawString("3D Viewer Options", 25, 215);
-		g.drawString("3D Skin Specific Options", 25, 270);
-
-		Start.gui.panel.repaint();
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		if(event.getSource()==view1Button)
+		if(event.getSource() == view1Button)
 		{
 			Stats2D.view = 0;
 			Stats2D.sync = true;
 			this.repaint();
 		}
-		if(event.getSource()==view2Button)
+		if(event.getSource() == view2Button)
 		{
 			Stats2D.view = 1;
 			Stats2D.sync = true;
 			this.repaint();
 		}
-		if(event.getSource()==partMain)
+		if(event.getSource() == partMain)
 		{
 			Stats2D.part = 0;
 			Stats2D.sync = true;
 			this.repaint();
 		}
-		if(event.getSource()==partHead)
+		if(event.getSource() == partHead)
 		{
 			Stats2D.part = 1;
 			Stats2D.sync = true;
 			this.repaint();
 		}
-		if(event.getSource()==partBody)
+		if(event.getSource() == partBody)
 		{
 			Stats2D.part = 2;
 			Stats2D.sync = true;
 			this.repaint();
 		}
-		if(event.getSource()==partArm)
+		if(event.getSource() == partArm)
 		{
 			Stats2D.part = 3;
 			Stats2D.sync = true;
 			this.repaint();
 		}
-		if(event.getSource()==partLeg)
+		if(event.getSource() == partLeg)
 		{
 			Stats2D.part = 4;
 			Stats2D.sync = true;
 			this.repaint();
 		}
 	}
-	
+
 	@Override
 	public void itemStateChanged(ItemEvent event)
 	{
-		if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)
+		if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr] != null)
 		{
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.head = head.getState();
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.headWear = headWear.getState();
@@ -173,25 +163,37 @@ public class OptionsPanel extends JPanel implements ActionListener, ItemListener
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legL = legL.getState();
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legR = legR.getState();
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.hasBlock = block.getState();
-			
+
 			Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].skinChanged();
 		}
 		Skin3DWorld.skins.stats.background = Background.values()[background.getState()? 0:1];
 	}
 
+	@Override
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+
+		g.drawString("2D Viewer Options", 25, 25);
+		g.drawString("3D Viewer Options", 25, 215);
+		g.drawString("3D Skin Specific Options", 25, 270);
+
+		Start.gui.panel.repaint();
+	}
+
 	public void reload()
 	{
-		if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr]!=null)
+		if(Skin3DWorld.skins.skins[Skin3DWorld.skins.curr] != null)
 		{
-			head.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.head:true));
-			headWear.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.headWear:true));
-			body.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.body:true));
-			armL.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armL:true));
-			armR.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armR:true));
-			legL.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legL:true));
-			legR.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legR:true));
-			block.setState(Skin3DWorld.skins==null?true:(Skin3DWorld.skins.skins.length>0?Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.hasBlock:true));
+			head.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.head:true));
+			headWear.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.headWear:true));
+			body.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.body:true));
+			armL.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armL:true));
+			armR.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.armR:true));
+			legL.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legL:true));
+			legR.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.legR:true));
+			block.setState(Skin3DWorld.skins == null? true:(Skin3DWorld.skins.skins.length > 0? Skin3DWorld.skins.skins[Skin3DWorld.skins.curr].stats.hasBlock:true));
 		}
-		background.setState(Skin3DWorld.skins==null?false:Skin3DWorld.skins.stats.background.ordinal()==0);
+		background.setState(Skin3DWorld.skins == null? false:Skin3DWorld.skins.stats.background.ordinal() == 0);
 	}
 }

@@ -22,54 +22,84 @@ public class Skin {
 	SkinCollection collection;
 	public SkinStats stats = new SkinStats();
 	ModelBox block;
-	
+
 	public Skin(BufferedImage img, int id, Texture texTop, Texture texSide, Texture texBottom, String name, SkinCollection collection)
 	{
 		loader3D = new TextureLoader3D(img);
-		this.skinFile = img;
+		skinFile = img;
 		this.id = id;
 		this.name = name;
 		this.collection = collection;
-		this.block = new ModelBox(new Texture[]{texBottom, texTop, texSide, texSide, texSide, texSide}, 0, 0, 0, 16, 16, 16);
+		block = new ModelBox(new Texture[]{texBottom, texTop, texSide, texSide, texSide, texSide}, 0, 0, 0, 16, 16, 16);
 	}
 
-	public void skinChanged()
+	public void drawSkin()
 	{
-		collection.saveCollectionToDisk();
+		if(stats.head)
+		{
+			SkinDrawer3D.drawHead(loader3D, true);
+		}
+		if(stats.headWear && !name.equals("Notch"))
+		{
+			SkinDrawer3D.drawHeadWear(loader3D);
+		}
+		if(stats.body)
+		{
+			SkinDrawer3D.drawBody(loader3D, true);
+		}
+		if(stats.armL)
+		{
+			SkinDrawer3D.drawLeftArm(loader3D, false, true);
+		}
+		if(stats.armR)
+		{
+			SkinDrawer3D.drawRightArm(loader3D, true, true);
+		}
+		if(stats.legL)
+		{
+			SkinDrawer3D.drawLeftLeg(loader3D, false);
+		}
+		if(stats.legR)
+		{
+			SkinDrawer3D.drawRightLeg(loader3D, true);
+		}
 	}
 
 	public void renderUpdate()
 	{
-		if(loader3D==null||loader3D.skinFile!=this.skinFile)
+		if((loader3D == null) || (loader3D.skinFile != skinFile))
 		{
 			loader3D = new TextureLoader3D(skinFile);
-			this.skinChanged();
+			skinChanged();
 		}
 
-		GL11.glTranslatef(-24.0F*id, 0.0F, 0.0F);
+		GL11.glTranslatef(-24.0F * id, 0.0F, 0.0F);
 
 		GL11.glPushMatrix();
 
-		this.drawSkin();
+		drawSkin();
 		GL11.glPopMatrix();
 
-		if(stats.hasBlock)this.block.draw();
+		if(stats.hasBlock)
+		{
+			block.draw();
+		}
 
-		GL11.glTranslatef(24.0F*id, 0.0F, 0.0F);
+		GL11.glTranslatef(24.0F * id, 0.0F, 0.0F);
 	}
 
 	public void setSkinTexture(BufferedImage img)
 	{
-		this.skinFile = img;
-		this.skinChanged();
+		skinFile = img;
+		skinChanged();
 	}
 
 	public void setSkinTexture(File file)
 	{
 		try
 		{
-			this.skinFile = ImageIO.read(file);
-			this.skinChanged();
+			skinFile = ImageIO.read(file);
+			skinChanged();
 		}
 		catch(IOException e)
 		{
@@ -77,14 +107,8 @@ public class Skin {
 		}
 	}
 
-	public void drawSkin()
+	public void skinChanged()
 	{
-		if(stats.head)SkinDrawer3D.drawHead(loader3D, true);
-		if(stats.headWear&&!this.name.equals("Notch")) SkinDrawer3D.drawHeadWear(loader3D);
-		if(stats.body)SkinDrawer3D.drawBody(loader3D, true);
-		if(stats.armL)SkinDrawer3D.drawLeftArm(loader3D, false, true);
-		if(stats.armR)SkinDrawer3D.drawRightArm(loader3D, true, true);
-		if(stats.legL)SkinDrawer3D.drawLeftLeg(loader3D, false);
-		if(stats.legR)SkinDrawer3D.drawRightLeg(loader3D, true);
+		collection.saveCollectionToDisk();
 	}
 }

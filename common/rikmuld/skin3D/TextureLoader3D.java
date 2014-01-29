@@ -15,21 +15,22 @@ public class TextureLoader3D extends TextureLoader2D {
 	public Texture[] body3D = new Texture[6];
 	public Texture[] arm3D = new Texture[6];
 	public Texture[] leg3D = new Texture[6];
-		
+
 	public TextureLoader3D(BufferedImage img)
 	{
 		this.setSkinFile(img);
 	}
 
+	@Override
 	public void setSkinFile(BufferedImage file)
 	{
 		super.setSkinFile(file);
-		this.setSkinTextures();
+		setSkinTextures();
 	}
 
 	public void setSkinTextures()
 	{
-		for(int i = 0; i<6; i++)
+		for(int i = 0; i < 6; i++)
 		{
 			try
 			{
